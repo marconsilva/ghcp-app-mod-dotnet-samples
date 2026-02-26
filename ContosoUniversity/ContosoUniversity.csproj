@@ -64,6 +64,7 @@
   <ItemGroup>
     <None Include=".github\upgrades\COMPREHENSIVE-TESTING-SUMMARY.md" />
     <None Include=".github\upgrades\test-implementation-summary.md" />
+    <None Include=".github\upgrades\TEST-INTEGRATION-COMPLETE.md" />
     <None Include=".github\upgrades\unit-testing-plan.md" />
     <None Include=".github\upgrades\vulnerability-assessment-report.md" />
     <None Include="Project_Readme.txt" />

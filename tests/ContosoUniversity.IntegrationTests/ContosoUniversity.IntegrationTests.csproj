@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\ContosoUniversity.csproj" />
+    <ProjectReference Include="..\..\ContosoUniversity\ContosoUniversity.csproj" />
   </ItemGroup>
 
 </Project>
