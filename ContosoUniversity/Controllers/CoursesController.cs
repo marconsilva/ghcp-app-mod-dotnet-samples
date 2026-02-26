@@ -118,7 +118,7 @@ namespace ContosoUniversity.Controllers
             Course course = db.Courses.Find(id);
             if (course == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
             ViewBag.DepartmentID = new SelectList(db.Departments, "DepartmentID", "Name", course.DepartmentID);
             return View(course);
