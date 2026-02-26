@@ -1,0 +1,160 @@
+name: Build and Deploy ContosoUniversity
+
+trigger:
+  branches:
+    include:
+    - main
+    - develop
+  paths:
+    exclude:
+    - '**/*.md'
+    - '.github/**'
+
+variables:
+  dockerRegistryServiceConnection: 'ContosoACR'
+  imageRepository: 'contosouniversity'
+  containerRegistry: 'contosoacr.azurecr.io'
+  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
+  tag: '$(Build.BuildId)'
+  vmImageName: 'ubuntu-latest'
+  dotnetSdkVersion: '9.0.x'
+
+stages:
+- stage: Build
+  displayName: Build and Test
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: UseDotNet@2
+      displayName: 'Install .NET SDK'
+      inputs:
+        packageType: 'sdk'
+        version: $(dotnetSdkVersion)
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Restore dependencies'
+      inputs:
+        command: 'restore'
+        projects: '**/*.csproj'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Build solution'
+      inputs:
+        command: 'build'
+        projects: '**/*.csproj'
+        arguments: '--configuration Release --no-restore'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Run tests'
+      inputs:
+        command: 'test'
+        projects: '**/tests/**/*.csproj'
+        arguments: '--configuration Release --no-build --collect:"XPlat Code Coverage"'
+        publishTestResults: true
+
+    - task: PublishCodeCoverageResults@1
+      displayName: 'Publish code coverage'
+      inputs:
+        codeCoverageTool: 'Cobertura'
+        summaryFileLocation: '$(Agent.TempDirectory)/**/*coverage.cobertura.xml'
+
+    - task: Docker@2
+      displayName: 'Build Docker image'
+      inputs:
+        containerRegistry: $(dockerRegistryServiceConnection)
+        repository: $(imageRepository)
+        command: 'build'
+        Dockerfile: $(dockerfilePath)
+        tags: |
+          $(tag)
+          latest
+
+    - task: Docker@2
+      displayName: 'Push Docker image'
+      inputs:
+        containerRegistry: $(dockerRegistryServiceConnection)
+        repository: $(imageRepository)
+        command: 'push'
+        tags: |
+          $(tag)
+          latest
+
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish Kubernetes manifests'
+      inputs:
+        targetPath: '$(Build.SourcesDirectory)/kubernetes'
+        artifact: 'kubernetes-manifests'
+
+- stage: DeployDev
+  displayName: Deploy to Development
+  dependsOn: Build
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
+  jobs:
+  - deployment: DeployToDev
+    displayName: Deploy to Development
+    pool:
+      vmImage: $(vmImageName)
+    environment: 'contoso-dev'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              artifact: 'kubernetes-manifests'
+              path: '$(System.DefaultWorkingDirectory)/kubernetes'
+
+          - task: KubernetesManifest@0
+            displayName: 'Deploy to Kubernetes'
+            inputs:
+              action: 'deploy'
+              kubernetesServiceConnection: 'contoso-aks-dev'
+              namespace: 'contosouniversity-dev'
+              manifests: |
+                $(System.DefaultWorkingDirectory)/kubernetes/deployment.yaml
+                $(System.DefaultWorkingDirectory)/kubernetes/ingress.yaml
+              containers: |
+                $(containerRegistry)/$(imageRepository):$(tag)
+
+- stage: DeployProd
+  displayName: Deploy to Production
+  dependsOn: Build
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  jobs:
+  - deployment: DeployToProd
+    displayName: Deploy to Production
+    pool:
+      vmImage: $(vmImageName)
+    environment: 'contoso-prod'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              artifact: 'kubernetes-manifests'
+              path: '$(System.DefaultWorkingDirectory)/kubernetes'
+
+          - task: KubernetesManifest@0
+            displayName: 'Deploy to Kubernetes'
+            inputs:
+              action: 'deploy'
+              kubernetesServiceConnection: 'contoso-aks-prod'
+              namespace: 'contosouniversity'
+              manifests: |
+                $(System.DefaultWorkingDirectory)/kubernetes/deployment.yaml
+                $(System.DefaultWorkingDirectory)/kubernetes/ingress.yaml
+              containers: |
+                $(containerRegistry)/$(imageRepository):$(tag)
+
+          - task: Bash@3
+            displayName: 'Run smoke tests'
+            inputs:
+              targetType: 'inline'
+              script: |
+                echo "Running smoke tests..."
+                curl -f http://contosouniversity.example.com/health || exit 1
+                echo "Smoke tests passed!"

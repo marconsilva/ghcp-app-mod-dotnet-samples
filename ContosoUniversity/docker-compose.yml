@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  # SQL Server for development/testing
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: contoso-sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrong!Passw0rd
+      - MSSQL_PID=Developer
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+    networks:
+      - contoso-network
+    healthcheck:
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P YourStrong!Passw0rd -Q "SELECT 1" || exit 1
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+
+  # ContosoUniversity Web Application
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: contoso-web
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=ContosoUniversity;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;
+      - NotificationQueuePath=.\\Private$$\\ContosoUniversityNotifications
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    networks:
+      - contoso-network
+    volumes:
+      # Persist uploads across container restarts
+      - uploads-data:/app/wwwroot/Uploads
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  sqlserver-data:
+    driver: local
+  uploads-data:
+    driver: local
+
+networks:
+  contoso-network:
+    driver: bridge

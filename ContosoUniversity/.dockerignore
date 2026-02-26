@@ -1,0 +1,79 @@
+# Docker ignore file for ContosoUniversity
+
+# Build artifacts
+**/bin/
+**/obj/
+**/out/
+
+# Test projects
+**/tests/
+
+# IDE files
+**/.vs/
+**/.vscode/
+**/.idea/
+*.user
+*.suo
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation
+**/*.md
+!README.md
+
+# Logs
+**/*.log
+
+# Temporary files
+**/temp/
+**/tmp/
+**/.tmp/
+
+# Node modules (if any)
+**/node_modules/
+
+# Package files
+*.nupkg
+*.snupkg
+
+# Database files
+**/*.mdf
+**/*.ldf
+**/*.db
+**/*.sqlite
+
+# Upload test files
+**/Uploads/TeachingMaterials/*.jpg
+**/Uploads/TeachingMaterials/*.png
+**/Uploads/TeachingMaterials/*.gif
+!**/Uploads/TeachingMaterials/.gitkeep
+
+# Coverage reports
+**/coverage/
+**/TestResults/
+**/coverage-report/
+
+# Build output
+**/publish/
+
+# Secrets
+**/*.pfx
+**/*.p12
+**/secrets.json
+
+# Docker files (don't copy into image)
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# CI/CD
+.github/
+azure-pipelines.yml
+.gitlab-ci.yml
+
+# Upgrade artifacts
+**/.appmod/
+**/dotnet-upgrade-*
