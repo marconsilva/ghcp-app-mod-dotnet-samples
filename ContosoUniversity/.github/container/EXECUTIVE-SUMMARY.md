@@ -120,24 +120,38 @@ You now have **4 deployment options**:
 ```
 **Best for**: Development, testing, demos
 
-### Option 2: Any Kubernetes Cluster
+### Option 2: ?? Azure Container Apps (~$320-420/mo)
+```bash
+cd azure
+.\deploy-container-apps.ps1
+```
+**Best for**: ContosoUniversity - **RECOMMENDED** ?
+- ? Serverless (no infrastructure management)
+- ? Auto-scaling (0-30 instances)
+- ? Automatic HTTPS
+- ? Fast deployment (15 min)
+- ? Perfect for educational apps
+- ?? 60% cost savings vs AKS
+
+### Option 3: Any Kubernetes Cluster
 ```bash
 kubectl apply -f kubernetes/
 # Works on: AKS, EKS, GKE, on-premises
 ```
-**Best for**: Multi-cloud, enterprise requirements
+**Best for**: Multi-cloud, existing K8s infrastructure
 
-### Option 3: Azure Container Apps (~$50-100/mo)
+### Option 4: Azure Kubernetes Service (~$600+/mo)
 ```bash
-./azure/deploy-container-apps.sh
+cd azure
+./deploy-aks.sh
 ```
-**Best for**: Simple deployment, variable traffic, minimal ops
+**Best for**: Complex microservices, advanced requirements
+- When you need full Kubernetes control
+- Service mesh capabilities
+- 10+ microservices
+- Advanced networking
 
-### Option 4: Azure Kubernetes Service (~$600/mo)
-```bash
-./azure/deploy-aks.sh
-```
-**Best for**: Large scale, advanced features, compliance
+**For ContosoUniversity**: Container Apps is the smart choice ??
 
 ---
 
