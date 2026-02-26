@@ -108,7 +108,7 @@ namespace ContosoUniversity.Controllers
             PopulateAssignedCourseData(instructor);
             if (instructor == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
             return View(instructor);
         }
