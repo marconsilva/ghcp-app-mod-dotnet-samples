@@ -9,6 +9,7 @@ using ContosoUniversity.Data;
 using ContosoUniversity.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using ContosoUniversity.Services;
 
 namespace ContosoUniversity.Controllers
 {
@@ -16,11 +17,12 @@ namespace ContosoUniversity.Controllers
     {
         private readonly IWebHostEnvironment _env;
 
-        public CoursesController(IWebHostEnvironment env)
+        public CoursesController(SchoolContext context, NotificationService notificationService, IWebHostEnvironment env)
+            : base(context, notificationService)
         {
             _env = env;
         }
-    {
+
         // GET: Courses
         public ActionResult Index()
         {

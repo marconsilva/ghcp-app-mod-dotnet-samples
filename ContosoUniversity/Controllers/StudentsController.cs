@@ -6,11 +6,16 @@ using Microsoft.AspNetCore.Mvc;
 using ContosoUniversity.Data;
 using ContosoUniversity.Models;
 using System.Diagnostics;
+using ContosoUniversity.Services;
 
 namespace ContosoUniversity.Controllers
 {
     public class StudentsController : BaseController
     {
+        public StudentsController(SchoolContext context, NotificationService notificationService) 
+            : base(context, notificationService)
+        {
+        }
         // GET: Students - Admins and Teachers can view
         public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
