@@ -7,10 +7,18 @@ using System.IO;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ContosoUniversity.Data;
 using ContosoUniversity.Models;
+using Microsoft.AspNetCore.Hosting;
 
 namespace ContosoUniversity.Controllers
 {
     public class CoursesController : BaseController
+    {
+        private readonly IWebHostEnvironment _env;
+
+        public CoursesController(IWebHostEnvironment env)
+        {
+            _env = env;
+        }
     {
         // GET: Courses
         public ActionResult Index()
@@ -73,7 +81,7 @@ namespace ContosoUniversity.Controllers
                     try
                     {
                         // Create uploads directory if it doesn't exist
-                        var uploadsPath = Server.MapPath("~/Uploads/TeachingMaterials/");
+                        var uploadsPath = Path.Combine(_env.WebRootPath ?? "wwwroot", "Uploads", "TeachingMaterials");
                         if (!Directory.Exists(uploadsPath))
                         {
                             Directory.CreateDirectory(uploadsPath);
@@ -156,7 +164,7 @@ namespace ContosoUniversity.Controllers
                     try
                     {
                         // Create uploads directory if it doesn't exist
-                        var uploadsPath = Server.MapPath("~/Uploads/TeachingMaterials/");
+                        var uploadsPath = Path.Combine(_env.WebRootPath ?? "wwwroot", "Uploads", "TeachingMaterials");
                         if (!Directory.Exists(uploadsPath))
                         {
                             Directory.CreateDirectory(uploadsPath);
@@ -169,7 +177,7 @@ namespace ContosoUniversity.Controllers
                         // Delete old file if exists
                         if (!string.IsNullOrEmpty(course.TeachingMaterialImagePath))
                         {
-                            var oldFilePath = Server.MapPath(course.TeachingMaterialImagePath);
+                            var oldFilePath = Path.Combine(_env.WebRootPath ?? "wwwroot", course.TeachingMaterialImagePath.TrimStart('~', '/').Replace('/', Path.DirectorySeparatorChar));
                             if (System.IO.File.Exists(oldFilePath))
                             {
                                 System.IO.File.Delete(oldFilePath);
@@ -226,7 +234,7 @@ namespace ContosoUniversity.Controllers
             // Delete associated image file if it exists
             if (!string.IsNullOrEmpty(course.TeachingMaterialImagePath))
             {
-                var filePath = Server.MapPath(course.TeachingMaterialImagePath);
+                var filePath = Path.Combine(_env.WebRootPath ?? "wwwroot", course.TeachingMaterialImagePath.TrimStart('~', '/').Replace('/', Path.DirectorySeparatorChar));
                 if (System.IO.File.Exists(filePath))
                 {
                     try
