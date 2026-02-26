@@ -7,7 +7,12 @@
   
 <!-- Exclude test files from main project -->
 <ItemGroup>
+  <Antlr4 Remove="App_Data\**" />
+  <Compile Remove="App_Data\**" />
   <Compile Remove="tests\**\*.cs" />
+  <Content Remove="App_Data\**" />
+  <EmbeddedResource Remove="App_Data\**" />
+  <None Remove="App_Data\**" />
 </ItemGroup>
   
 <ItemGroup>
@@ -50,7 +55,6 @@
     <PackageReference Include="System.Security.Cryptography.X509Certificates" Version="4.3.2" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ROLE_SETUP_GUIDE.md" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -59,14 +63,23 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include=".github\container\ARCHITECTURE-DIAGRAMS.md" />
+    <None Include=".github\container\CONTAINER-APPS-ARCHITECTURE.md" />
+    <None Include=".github\container\CONTAINER-APPS-OPERATIONS.md" />
+    <None Include=".github\container\CONTAINER-APPS-QUICKSTART.md" />
+    <None Include=".github\container\CONTAINER-APPS-VS-AKS.md" />
+    <None Include=".github\container\CONTAINERIZATION-COMPLETE.md" />
+    <None Include=".github\container\CONTAINERIZATION-GUIDE.md" />
+    <None Include=".github\container\DEPLOYMENT-CHECKLIST.md" />
+    <None Include=".github\container\EXECUTIVE-SUMMARY.md" />
+    <None Include=".github\container\FINAL-SUMMARY.md" />
+    <None Include=".github\container\MODERNIZATION-COMPLETE.md" />
+    <None Include=".github\container\QUICK-REFERENCE.md" />
     <None Include=".github\upgrades\COMPREHENSIVE-TESTING-SUMMARY.md" />
     <None Include=".github\upgrades\test-implementation-summary.md" />
     <None Include=".github\upgrades\TEST-INTEGRATION-COMPLETE.md" />
     <None Include=".github\upgrades\unit-testing-plan.md" />
     <None Include=".github\upgrades\vulnerability-assessment-report.md" />
-    <None Include="Project_Readme.txt" />
+    <None Include=".github\workflows\docker-build.yml" />
   </ItemGroup>
 </Project>
