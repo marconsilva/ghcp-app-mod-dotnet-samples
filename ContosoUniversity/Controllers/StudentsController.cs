@@ -72,7 +72,7 @@ namespace ContosoUniversity.Controllers
                 .Where(s => s.ID == id).Single();
             if (student == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
             return View(student);
         }
