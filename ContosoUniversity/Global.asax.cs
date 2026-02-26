@@ -1,7 +1,5 @@
 using System;
 using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
 using Microsoft.EntityFrameworkCore;
 using ContosoUniversity.Data;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,10 +10,6 @@ namespace ContosoUniversity
     {
         protected void Application_Start()
         {
-            AreaRegistration.RegisterAllAreas();
-            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
-            
             // Initialize database with EF Core
             InitializeDatabase();
         }
