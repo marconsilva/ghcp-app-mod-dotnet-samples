@@ -24,7 +24,7 @@ namespace ContosoUniversity.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return BadRequest();
             }
             Course course = db.Courses.Include(c => c.Department).Where(c => c.CourseID == id).Single();
             if (course == null)
