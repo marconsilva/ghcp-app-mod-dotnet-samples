@@ -136,7 +136,7 @@ namespace ContosoUniversity.Controllers
             Student student = db.Students.Find(id);
             if (student == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
             return View(student);
         }
