@@ -50,7 +50,7 @@ namespace ContosoUniversity.Controllers
             Instructor instructor = db.Instructors.Find(id);
             if (instructor == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
             return View(instructor);
         }
