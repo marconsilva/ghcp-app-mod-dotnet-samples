@@ -1,10 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <OutputPath>bin\</OutputPath>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-  </PropertyGroup>
-  <ItemGroup>
+<PropertyGroup>
+  <TargetFramework>net9.0</TargetFramework>
+  <OutputPath>bin\</OutputPath>
+  <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+</PropertyGroup>
+  
+<!-- Exclude test files from main project -->
+<ItemGroup>
+  <Compile Remove="tests\**\*.cs" />
+</ItemGroup>
+  
+<ItemGroup>
     <PackageReference Include="bootstrap" Version="5.3.3" />
     <PackageReference Include="jQuery" Version="3.7.1" />
     <PackageReference Include="jQuery.Validation" Version="1.21.0" />
@@ -56,6 +62,7 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".github\upgrades\unit-testing-plan.md" />
     <None Include=".github\upgrades\vulnerability-assessment-report.md" />
     <None Include="Project_Readme.txt" />
   </ItemGroup>

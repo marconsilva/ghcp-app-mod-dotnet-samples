@@ -1,0 +1,14 @@
+<Project>
+  <PropertyGroup>
+    <!-- Enable default compile items but exclude tests -->
+    <EnableDefaultCompileItems>true</EnableDefaultCompileItems>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <!-- Explicitly exclude test files from being compiled in the main web project -->
+    <Compile Remove="tests\**\*.cs" />
+    <Content Remove="tests\**\*" />
+    <EmbeddedResource Remove="tests\**\*" />
+    <None Remove="tests\**\*" />
+  </ItemGroup>
+</Project>
