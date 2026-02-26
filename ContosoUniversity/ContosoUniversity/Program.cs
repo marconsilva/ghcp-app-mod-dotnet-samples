@@ -1,4 +1,5 @@
 using ContosoUniversity.Data;
+using ContosoUniversity.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,9 @@ builder.Services.AddControllersWithViews();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<SchoolContext>(options =>
     options.UseSqlServer(connectionString));
+
+// Register NotificationService
+builder.Services.AddSingleton<NotificationService>();
 
 var app = builder.Build();
 
