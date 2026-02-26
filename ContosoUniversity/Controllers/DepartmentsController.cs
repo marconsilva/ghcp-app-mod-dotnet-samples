@@ -28,7 +28,7 @@ namespace ContosoUniversity.Controllers
             Department department = db.Departments.Find(id);
             if (department == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
             return View(department);
         }
