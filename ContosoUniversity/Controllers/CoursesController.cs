@@ -210,7 +210,7 @@ namespace ContosoUniversity.Controllers
             Course course = db.Courses.Include(c => c.Department).Where(c => c.CourseID == id).Single();
             if (course == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
             return View(course);
         }
