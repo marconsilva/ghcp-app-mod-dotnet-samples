@@ -97,7 +97,7 @@ namespace ContosoUniversity.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return StatusCode((int)HttpStatusCode.BadRequest);
             }
             Instructor instructor = db.Instructors
                 .Include(i => i.OfficeAssignment)
